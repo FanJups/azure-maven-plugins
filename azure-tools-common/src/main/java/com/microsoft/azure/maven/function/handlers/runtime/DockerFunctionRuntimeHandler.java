@@ -8,20 +8,9 @@ package com.microsoft.azure.maven.function.handlers.runtime;
 
 import com.microsoft.azure.common.exceptions.AzureExecutionException;
 import com.microsoft.azure.management.appservice.FunctionApp;
-import com.microsoft.azure.maven.Utils;
-import com.microsoft.azure.maven.appservice.DockerImageType;
-import com.microsoft.azure.maven.utils.AppServiceUtils;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.RandomUtils;
-import org.apache.maven.settings.Server;
-
-import static com.microsoft.azure.maven.Utils.assureServerExist;
-import static com.microsoft.azure.maven.appservice.DockerImageType.PUBLIC_DOCKER_HUB;
-import static com.microsoft.azure.maven.function.Constants.APP_SETTING_FUNCTION_APP_EDIT_MODE;
-import static com.microsoft.azure.maven.function.Constants.APP_SETTING_FUNCTION_APP_EDIT_MODE_VALUE;
-import static com.microsoft.azure.maven.function.Constants.APP_SETTING_MACHINEKEY_DECRYPTION_KEY;
-import static com.microsoft.azure.maven.function.Constants.APP_SETTING_WEBSITES_ENABLE_APP_SERVICE_STORAGE;
-import static com.microsoft.azure.maven.function.Constants.APP_SETTING_WEBSITES_ENABLE_APP_SERVICE_STORAGE_VALUE;
 
 public class DockerFunctionRuntimeHandler extends AbstractLinuxFunctionRuntimeHandler {
 
@@ -46,58 +35,60 @@ public class DockerFunctionRuntimeHandler extends AbstractLinuxFunctionRuntimeHa
 
     @Override
     public FunctionApp.DefinitionStages.WithCreate defineAppWithRuntime() throws AzureExecutionException {
-        final Server server = Utils.getServer(settings, serverId);
-        final DockerImageType imageType = AppServiceUtils.getDockerImageType(image, serverId, registryUrl);
-        checkFunctionExtensionVersion();
-        checkServerConfiguration(imageType, server);
-
-        final FunctionApp.DefinitionStages.WithDockerContainerImage withDockerContainerImage = super.defineLinuxFunction();
-        final FunctionApp.DefinitionStages.WithCreate result;
-        switch (imageType) {
-            case PUBLIC_DOCKER_HUB:
-                result = withDockerContainerImage.withPublicDockerHubImage(image);
-                break;
-            case PRIVATE_DOCKER_HUB:
-                result = withDockerContainerImage.withPrivateDockerHubImage(image).withCredentials(server.getUsername(), server.getPassword());
-                break;
-            case PRIVATE_REGISTRY:
-                result = withDockerContainerImage.withPrivateRegistryImage(image, registryUrl).withCredentials(server.getUsername(), server.getPassword());
-                break;
-            default:
-                throw new AzureExecutionException(INVALID_DOCKER_RUNTIME);
-        }
-        final String decryptionKey = generateDecryptionKey();
-        return (FunctionApp.DefinitionStages.WithCreate) result
-                .withAppSetting(APP_SETTING_MACHINEKEY_DECRYPTION_KEY, decryptionKey)
-                .withAppSetting(APP_SETTING_WEBSITES_ENABLE_APP_SERVICE_STORAGE, APP_SETTING_WEBSITES_ENABLE_APP_SERVICE_STORAGE_VALUE)
-                .withAppSetting(APP_SETTING_FUNCTION_APP_EDIT_MODE, APP_SETTING_FUNCTION_APP_EDIT_MODE_VALUE);
+//        final Server server = Utils.getServer(settings, serverId);
+//        final DockerImageType imageType = AppServiceUtils.getDockerImageType(image, serverId, registryUrl);
+//        checkFunctionExtensionVersion();
+//        checkServerConfiguration(imageType, server);
+//
+//        final FunctionApp.DefinitionStages.WithDockerContainerImage withDockerContainerImage = super.defineLinuxFunction();
+//        final FunctionApp.DefinitionStages.WithCreate result;
+//        switch (imageType) {
+//            case PUBLIC_DOCKER_HUB:
+//                result = withDockerContainerImage.withPublicDockerHubImage(image);
+//                break;
+//            case PRIVATE_DOCKER_HUB:
+//                result = withDockerContainerImage.withPrivateDockerHubImage(image).withCredentials(server.getUsername(), server.getPassword());
+//                break;
+//            case PRIVATE_REGISTRY:
+//                result = withDockerContainerImage.withPrivateRegistryImage(image, registryUrl).withCredentials(server.getUsername(), server.getPassword());
+//                break;
+//            default:
+//                throw new AzureExecutionException(INVALID_DOCKER_RUNTIME);
+//        }
+//        final String decryptionKey = generateDecryptionKey();
+//        return (FunctionApp.DefinitionStages.WithCreate) result
+//                .withAppSetting(APP_SETTING_MACHINEKEY_DECRYPTION_KEY, decryptionKey)
+//                .withAppSetting(APP_SETTING_WEBSITES_ENABLE_APP_SERVICE_STORAGE, APP_SETTING_WEBSITES_ENABLE_APP_SERVICE_STORAGE_VALUE)
+//                .withAppSetting(APP_SETTING_FUNCTION_APP_EDIT_MODE, APP_SETTING_FUNCTION_APP_EDIT_MODE_VALUE);
+        return null;
     }
 
     @Override
     public FunctionApp.Update updateAppRuntime(FunctionApp app) throws AzureExecutionException {
-        final Server server = Utils.getServer(settings, serverId);
-        final DockerImageType imageType = AppServiceUtils.getDockerImageType(image, serverId, registryUrl);
-        checkFunctionExtensionVersion();
-        checkServerConfiguration(imageType, server);
-
-        final FunctionApp.Update update = app.update();
-        switch (imageType) {
-            case PUBLIC_DOCKER_HUB:
-                return update.withPublicDockerHubImage(image);
-            case PRIVATE_DOCKER_HUB:
-                return update.withPrivateDockerHubImage(image).withCredentials(server.getUsername(), server.getPassword());
-            case PRIVATE_REGISTRY:
-                return update.withPrivateRegistryImage(image, registryUrl).withCredentials(server.getUsername(), server.getPassword());
-            default:
-                throw new AzureExecutionException(INVALID_DOCKER_RUNTIME);
-        }
+//        final Server server = Utils.getServer(settings, serverId);
+//        final DockerImageType imageType = AppServiceUtils.getDockerImageType(image, serverId, registryUrl);
+//        checkFunctionExtensionVersion();
+//        checkServerConfiguration(imageType, server);
+//
+//        final FunctionApp.Update update = app.update();
+//        switch (imageType) {
+//            case PUBLIC_DOCKER_HUB:
+//                return update.withPublicDockerHubImage(image);
+//            case PRIVATE_DOCKER_HUB:
+//                return update.withPrivateDockerHubImage(image).withCredentials(server.getUsername(), server.getPassword());
+//            case PRIVATE_REGISTRY:
+//                return update.withPrivateRegistryImage(image, registryUrl).withCredentials(server.getUsername(), server.getPassword());
+//            default:
+//                throw new AzureExecutionException(INVALID_DOCKER_RUNTIME);
+//        }
+        return null;
     }
 
-    protected void checkServerConfiguration(DockerImageType imageType, Server server) throws AzureExecutionException {
-        if (imageType != PUBLIC_DOCKER_HUB) {
-            assureServerExist(server, serverId);
-        }
-    }
+//    protected void checkServerConfiguration(DockerImageType imageType, Server server) throws AzureExecutionException {
+//        if (imageType != PUBLIC_DOCKER_HUB) {
+//            assureServerExist(server, serverId);
+//        }
+//    }
 
     protected String generateDecryptionKey() {
         // Refers https://github.com/Azure/azure-cli/blob/dev/src/azure-cli/azure/cli/command_modules/appservice/custom.py#L2300

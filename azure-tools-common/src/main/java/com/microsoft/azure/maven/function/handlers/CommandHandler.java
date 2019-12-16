@@ -16,6 +16,14 @@ public interface CommandHandler {
                                        final List<Long> validReturnCodes,
                                        final String errorMessage) throws Exception;
 
+
+    void runCommandWithReturnCodeCheck2(
+    		String []command,
+            final boolean showStdout,
+            final String workingDirectory,
+            final List<Long> validReturnCodes,
+            final String errorMessage) throws Exception;
+
     String runCommandAndGetOutput(final String command,
                                   final boolean showStdout,
                                   final String workingDirectory) throws Exception;

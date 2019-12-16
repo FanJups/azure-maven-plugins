@@ -46,9 +46,9 @@ public class ZIPArtifactHandlerImpl extends ArtifactHandlerBase {
 
     @Override
     public void publish(DeployTarget target) throws AzureExecutionException, IOException {
-        if (isResourcesPreparationRequired(target)) {
-            prepareResources();
-        }
+//        if (isResourcesPreparationRequired(target)) {
+//            prepareResources();
+//        }
         assureStagingDirectoryNotEmpty();
 
         final File zipFile = getZipFile();

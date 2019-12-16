@@ -35,6 +35,10 @@ public final class Log {
     public static void debug(String message) {
         logger.debug(message);
     }
+    
+    public static void debug(Exception ex) {
+        logger.debug(ex);
+    }
 
     public static void debug(String message, Exception ex) {
         logger.debug(message, ex);
